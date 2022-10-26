@@ -18,21 +18,21 @@ object UIComponents
   import scalafx.collections.ObservableBuffer
   import scalafx.event.ActionEvent
 
-  
+
   //------ MicroComponents -------
-  
+
   val textPreview = new TextField
   {
-    text = "Title Preview Here"
+    text = "Text Preview Here"
     minWidth = centerWidth - (2 * spacingSmall)
-    minHeight = 20
+    minHeight = 200
   }
 
   val titlePreview = new TextField
   {
-    text = "Text Preview Here"
+    text = "Title Preview Here"
     minWidth = centerWidth - (2 * spacingSmall)
-    minHeight = 150
+    minHeight = 20
   }
 
   val selectSrcFile = new TextField
@@ -120,12 +120,11 @@ object UIComponents
     text = "Genera TiddlyWiki Tiddlers"
     //allowIndeterminate = true
     //indeterminate = false
-    disable = true
+    disable = false
   }
 
-  
-  //------ MacroComponents -------
 
+  //------ MacroComponents -------
 
   def checks = new VBox
   {
@@ -161,6 +160,8 @@ object UIComponents
 
       checkBoxJSON,
 
+      checkBoxTW,
+
       new Button
       {
         text = "Esporta"
@@ -189,7 +190,14 @@ object UIComponents
             "JSON"
             )
 
+          if (checkBoxTW.isSelected) fileGenerator(
+            resultList.getItems.toList,
+            s"${selectDestDir.getText}\\$fileName.tx.json",
+            "TW"
+            )
         }
+
+        statusBar.setText("Esportazione cards completata")
 
       }
     )
@@ -203,23 +211,25 @@ object UIComponents
     spacing = spacingSmall
     padding = Insets(insetSmall)
     children = List(
+      new Label("Titolo"),
       titlePreview,
+      new Label("Corpo"),
       textPreview
       //resultList
     )
   }
 
-
   def selectionSrc = new HBox
   {
     vgrow = Priority.Always
-    hgrow = Priority.Always
+    hgrow = Priority.Never
     spacing = 0
     padding = Insets(0)
     children = List(
       new Label
       {
         text = "File sorgente"
+        minWidth = buttonWidth
         maxWidth = buttonWidth
       },
       selectSrcFile,
@@ -230,13 +240,14 @@ object UIComponents
   def selectionDst = new HBox
   {
     vgrow = Priority.Always
-    hgrow = Priority.Always
+    hgrow = Priority.Never
     spacing = 0
     padding = Insets(0)
     children = List(
       new Label
       {
         text = "Cartella di destinazione"
+        minWidth = buttonWidth
         maxWidth = buttonWidth
       },
       selectDestDir,
@@ -256,16 +267,6 @@ object UIComponents
     )
   }
 
-  //    List(
-  //    new ChoiceBox[String]()
-  //    {
-  //      maxWidth = 80
-  //      maxHeight = 50
-  //      items = ObservableBuffer("Earth", "Sky", "Paradise")
-  //      selectionModel().selectFirst()
-  //    }
-  //   )
-
   def results = new VBox
   {
     vgrow = Priority.Always
@@ -275,19 +276,17 @@ object UIComponents
     children = List(
       new Label("Risultati"),
       resultList
-
     )
   }
 
-  
+
   //------ Actions -------
-  
+
   def openFileChooser(stg: Stage): String =
   {
     val fileChooser = new FileChooser()
     fileChooser.showOpenDialog(stg).getAbsolutePath
   }
-
 
   def openDirChooser(stg: Stage): String =
   {

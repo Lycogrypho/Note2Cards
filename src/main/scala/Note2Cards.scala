@@ -27,31 +27,22 @@ object Note2Cards extends JFXApp3
       StageProvider.register(this)
       
       title.value = "Note2Cards Converter"
-      width = stageMinWidth
+      width = stageMinWidth + 2 * (insetLarge + spacingLarge)
       height = 800
       scene = new Scene
       {
         fill = gradientB
-        //        content = new TilePane
-        //        {
-        //          padding = Insets(insetLarge)
-        //          orientation = Orientation.Vertical
-        //          hgap = spacingLarge
-        //          vgap = spacingLarge
-        //          children = List(checks, selector, buttonPane, previewer)
-        //        }
-
         content = new BorderPane
         {
-          minWidth = stageMinWidth - (4*spacingLarge)
+          minWidth = stageMinWidth
           //maxWidth = stage.getWidth() - (4*spacingLarge)
           maxHeight = 768
-          padding = Insets(insetLarge)
-          top    = selector
-          left   = checks
-          center = previewer
-          right  = results
-          bottom = statusBar
+          padding   = Insets(insetLarge)
+          top       = selector
+          left      = checks
+          center    = previewer
+          right     = results
+          bottom    = statusBar
         }
 
       }

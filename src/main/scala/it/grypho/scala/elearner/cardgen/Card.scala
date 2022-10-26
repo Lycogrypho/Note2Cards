@@ -25,8 +25,23 @@ case class Card(rawTitle: String, rawBody: String)
      }
      """.stripMargin
 
-  //def saveAsHTML = {}
+  def toTW(tags: String = "") =
+    {
+      println(title)
+      val timestamp = "20221025065135356"
+      s"""
+          {
+            "created": "$timestamp",
+            "creator": "Notes2Cards",
+            "text": "$body",
+            "title": "$title",
+            "tags": "$tags",
+            "modified": "$timestamp",
+            "modifier": "Notes2Cards",
+            "tmap.id": "53ba1ab2-a8e6-47d3-9d3a-396c75abb8f0"
+          }
+       """.stripMargin
 
-  //def saveAsMnemosyne = {}
+    }
 
 }

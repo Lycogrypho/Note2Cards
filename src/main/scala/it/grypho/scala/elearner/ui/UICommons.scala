@@ -20,12 +20,12 @@ object UICommons
   val spacingLarge = 5
   val spacingSmall = 3
 
-  val buttonWidth     = 400
-  val listWidth       = 500
+  val buttonWidth     = 300
+  val listWidth       = 400
   val inputFieldWidth = 600
-  val centerWidth     = 450
+  val centerWidth     = 350
 
-  val stageMinWidth = buttonWidth + listWidth + centerWidth + 2 * (insetLarge + spacingLarge)//inputFieldWidth + spacingLarge
+  val stageMinWidth = buttonWidth + listWidth + centerWidth + 2 * (insetLarge + spacingLarge) //inputFieldWidth + spacingLarge
 
   //----- Colors ------
   val gradientB = new LinearGradient(

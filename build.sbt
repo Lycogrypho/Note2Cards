@@ -1,13 +1,18 @@
 organization := "it.grypho"
 
-ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / version := "0.2.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "3.1.3"
+
+//ThisBuild / assemblyMergeStrategy := {
+//    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+//    case x => MergeStrategy.first
+//}
 
 
 lazy val root = (project in file("."))
   .settings(
-    name := "Note2Cards"
+    name := "Note2Cards",
     )
 
 
@@ -56,6 +61,8 @@ libraryDependencies += "org.scalafx" %% "scalafx-extras" % "0.7.0"
 // libraryDependencies += "org.apache.commons" % "org.apache.commons.codec" % "1.3.0-20081006" // https://mvnrepository.com/artifact/org.apache.commons/org.apache.commons.codec
 // libraryDependencies += "at.bestsolution.efxclipse.eclipse" % "org.apache.commons.codec" % "1.6.0"    // https://mvnrepository.com/artifact/at.bestsolution.efxclipse.eclipse/org.apache.commons.codec
 // https://mvnrepository.com/artifact/org.eclipse.ecf/org.apache.commons.codec
+//	@FindBy(css="")
+//	private WebElement webElement;
 //libraryDependencies += "org.eclipse.ecf" % "org.apache.commons.codec" % "1.9.0.v20170208-1614"
 
 // Browser component
@@ -64,3 +71,13 @@ libraryDependencies += "org.scalafx" %% "scalafx-extras" % "0.7.0"
 // https://mvnrepository.com/artifact/com.teamdev.jxbrowser/jxbrowser-cross-platform
 //libraryDependencies += "com.teamdev.jxbrowser" % "jxbrowser-cross-platform" % "7.0"
 
+lazy val app = (project in file("Note2Cards"))
+  .settings(
+    assembly / assemblyJarName := s"${name.value}-${version.value}"
+    )
+
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}

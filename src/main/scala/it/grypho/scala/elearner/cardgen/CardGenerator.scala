@@ -1,6 +1,7 @@
 package it.grypho.scala.elearner.cardgen
 
 import it.grypho.scala.elearner.cardgen.Card
+import it.grypho.scala.elearner.ui.StageRelay
 import scalafx.collections.ObservableBuffer
 
 import scala.util.Try
@@ -27,7 +28,7 @@ object CardGenerator
     System.out.println("Extracted Content: " + fileContent)
   }
   
-  def extractText(filename: String) =
+  def extractText(fileName: String) =
   {
     import org.apache.tika.exception.TikaException
     import org.apache.tika.metadata.Metadata
@@ -38,7 +39,7 @@ object CardGenerator
     import java.io.{File, FileInputStream, IOException}
 
     //Assume sample.txt is in your current directory
-    val file: File = new File(filename)
+    val file: File = new File(fileName)
 
     //parse method parameters
     val parser     : Parser             = new AutoDetectParser()
@@ -57,7 +58,7 @@ object CardGenerator
     (handler, metadata)
   }
 
-  def extractXML(filename: String) =
+  def extractXML(fileName: String) =
   {
     import org.apache.tika.exception.TikaException
     import org.apache.tika.metadata.Metadata
@@ -68,7 +69,7 @@ object CardGenerator
     import java.io.{File, FileInputStream, IOException}
 
     //Assume sample.txt is in your current directory
-    val file: File = new File(filename)
+    val file: File = new File(fileName)
 
     //parse method parameters
     val parser      : Parser             = new AutoDetectParser()
@@ -76,7 +77,6 @@ object CardGenerator
     val handler     : BodyContentHandler = new BodyContentHandler()
     val handler_xml                      = new ToXMLContentHandler() //XHTMLContentHandler(handler, metadata_xml)
     val inputstream : FileInputStream    = new FileInputStream(file)
-    //val inputstream2                 = new FileInputStream(file)
     val context     : ParseContext       = new ParseContext()
 
     import org.apache.tika.parser.html.{HtmlMapper, IdentityHtmlMapper}
@@ -85,7 +85,7 @@ object CardGenerator
 
     //parsing the file
     parser.parse(inputstream, handler_xml, metadata_xml, context)
-    //val raw = inputstream2.readAllBytes().mkString("")
+
     (handler_xml, metadata_xml)
   }
   
@@ -93,25 +93,30 @@ object CardGenerator
   {
     import scala.util.matching.Regex
 
-    val pattern = """<p><b>(.*)</b>(.*)</p>""".r
+    val pattern = StageRelay.regexString.stripMargin.r
+
     {
-      for (patternMatch <- pattern.findAllMatchIn(content)) yield
-      {
-        //println(s"Title: ${patternMatch.group(1)} \tBody: ${patternMatch.group(2)}")
+      for (patternMatch <- pattern.findAllMatchIn(content) ) yield
         Card(patternMatch.group(1), patternMatch.group(2))
-      }
-    }.toList //.asInstanceOf[ObservableBuffer[Card]]
+    }.toList
 
   }
 
-  def generateAllCards(filename: String) =
+  def generateAllCards(fileName: String) =
   {
-    //"C:\\Users\\cosimoattanasi\\Desktop\\Chimica.odt"
-    val (hex, mex) = extractXML(filename)
+    val (hex, mex) = extractXML(fileName)
 
+    val saveIntermediate = true
+
+    if (saveIntermediate)
+    {
+      import java.io._
+
+      val writer = new PrintWriter(new File(fileName + "-raw.xml"))
+      writer.write(hex.toString)
+      writer.close
+    }
     val c: List[Card] = CardGenerator.createCards(hex.toString)
-    //val d             = c.mkString("\r\n") //map(a => s"$a")
-    //println(d)
     c
   }
 
@@ -150,11 +155,11 @@ object CardGenerator
     import java.io._
 
     val content: Seq[(String, String)] = fileType.toUpperCase match
-      case "txt"  => for (card <- cards) yield (card.title, card.toHTML())
-      case "tsv"  => for (card <- cards) yield (card.title, card.toTSV)
-      case "csv"  => for (card <- cards) yield (card.title, card.toCSV)
-      case "JSON" => for (card <- cards) yield (card.title, card.toJSON(false))
-      case "TW"   => for (card <- cards) yield (card.title, card.toTW(fileName.split('\\').last.split('.').head))
+      case "txt"  => for (card <- cards) yield (card.title.value, card.toHTML())
+      case "tsv"  => for (card <- cards) yield (card.title.value, card.toTSV)
+      case "csv"  => for (card <- cards) yield (card.title.value, card.toCSV)
+      case "JSON" => for (card <- cards) yield (card.title.value, card.toJSON(false))
+      case "TW"   => for (card <- cards) yield (card.title.value, card.toTW(fileName.split('\\').last.split('.').head))
       case _      => Seq(("",""))
 
     for (line <- content)

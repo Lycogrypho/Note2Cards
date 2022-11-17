@@ -14,7 +14,7 @@ import scalafx.scene.layout.BorderPane
 
 import it.grypho.scala.elearner.ui.UICommons._
 import it.grypho.scala.elearner.ui.UIComponents._
-import it.grypho.scala.elearner.ui.StageProvider
+import it.grypho.scala.elearner.ui.StageRelay
 
 
 
@@ -24,7 +24,7 @@ object Note2Cards extends JFXApp3
   {
     stage = new JFXApp3.PrimaryStage
     {
-      StageProvider.register(this)
+      StageRelay.register(this)
       
       title.value = "Note2Cards Converter"
       width = stageMinWidth + 2 * (insetLarge + spacingLarge)
@@ -40,12 +40,12 @@ object Note2Cards extends JFXApp3
           padding   = Insets(insetLarge)
           top       = selector
           left      = checks
-          center    = previewer
-          right     = results
+          center    = results
+          //right     = previewer
           bottom    = statusBar
         }
 
       }
     }
-  }
+}
 }
